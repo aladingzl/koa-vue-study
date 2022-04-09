@@ -16,7 +16,7 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" class="login-btn">
+          <el-button type="primary" class="login-btn" @click="login">
             登录
           </el-button>
         </el-form-item>
@@ -26,7 +26,17 @@
 </template>
 
 <script>
-export default {};
+export default {
+  name: "login",
+  data() {
+    return;
+  },
+  methods: {
+    login() {
+      
+    }
+  }
+};
 </script>
 
 <style lang="scss">
