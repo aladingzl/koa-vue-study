@@ -2,7 +2,7 @@
   <div class="login-wrapper">
     <div class="modal">
       <el-form>
-        <div class="title">火星</div>
+        <div class="title">欢迎登录</div>
         <el-form-item prop="userName">
           <el-input 
             type="text" 
@@ -45,13 +45,16 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: #f9fcff;
+  background-image: url('../assets/images/bg2.jpg');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   width: 100vw;
   height: 100vh;
   .modal {
     width: 500px;
     padding: 50px;
-    background-color: #fff;
-    border-radius: 4px;
+    background-color: rgba($color: #fff, $alpha: .6); 
+    border-radius: 12px;
     .title {
       font-size: 30px;
       line-height: 1.5;
