@@ -5,5 +5,6 @@ export default {
   saveUserInfo(state, userInfo) {
     state.userInfo = userInfo;
     storage.setItem('userInfo', userInfo);
+    console.log(userInfo);
   }
 }
