@@ -1,18 +1,20 @@
 <template>
   <div class="login-wrapper">
     <div class="modal">
-      <el-form>
+      <el-form ref="userForm" :model="user" status-icon :rules="rules">
         <div class="title">欢迎登录</div>
         <el-form-item prop="userName">
-          <el-input 
-            type="text" 
-            prefix-icon="el-icon-user"  
+          <el-input
+            type="text"
+            prefix-icon="el-icon-user"
+            v-model="user.userName"
           />
         </el-form-item>
         <el-form-item prop="userPwd">
-          <el-input 
-            type="password" 
-            prefix-icon="el-icon-view"  
+          <el-input
+            type="password"
+            prefix-icon="el-icon-view"
+            v-model="user.userPwd"
           />
         </el-form-item>
         <el-form-item>
@@ -29,13 +31,47 @@
 export default {
   name: "login",
   data() {
-    return;
+    return {
+      user: {
+        userName: "",
+        userPwd: "",
+      },
+      rules: {
+        userName: [
+          {
+            required: true,
+            message: "请输入用户名",
+            trigger: "blur",
+          },
+        ],
+        userPwd: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: "blur",
+          },
+        ],
+      },
+    };
   },
   methods: {
     login() {
-      
-    }
-  }
+      this.$refs.userForm.validate((valid) => {
+        if (valid) {
+          this.$api.login(this.user).then((res) => {
+            console.log(res);
+            this.$store.commit("saveUserInfo", res);
+            this.$router.push("/welcome");
+          });
+        } else {
+          return false;
+        }
+      });
+    },
+    goHome() {
+      this.$router.push("/welcome");
+    },
+  },
 };
 </script>
 
@@ -45,7 +81,7 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: #f9fcff;
-  background-image: url('../assets/images/bg2.jpg');
+  background-image: url("../assets/images/bg2.jpg");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   width: 100vw;
@@ -53,7 +89,7 @@ export default {
   .modal {
     width: 500px;
     padding: 50px;
-    background-color: rgba($color: #fff, $alpha: .6); 
+    background-color: rgba($color: #fff, $alpha: 0.6);
     border-radius: 12px;
     .title {
       font-size: 30px;

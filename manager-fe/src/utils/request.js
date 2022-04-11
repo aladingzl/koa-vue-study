@@ -20,16 +20,16 @@ const service = axios.create({
 // 请求拦截
 service.interceptors.request.use((req) => {
   const headers = req.headers;
-  const { token } = storage.getItem('');
+  // const { token } = storage.getItem('userInfo');
   if(!headers.Authorization) {
-    headers.Authorization = 'Bearer' + token;
+    headers.Authorization = 'Bearer' + 'Jack';
   }
   return req;
 })
 
 // 响应拦截
 service.interceptors.response.use((res) => {
-  const { code, data, msg} = re.data;
+  const { code, data, msg} = res.data;
   if(code === 200) {
     return data;
   } else if(code === 500001) {
@@ -48,6 +48,7 @@ service.interceptors.response.use((res) => {
 // 请求函数
 
 function request(options) {
+  console.log(config);
   options.method = options.method || 'get';
   if(options.method.toLowerCase() === 'get') {
     options.params = options.data;
@@ -60,6 +61,7 @@ function request(options) {
     service.defaults.baseURL = config.baseApi;
   } else {
     service.defaults.baseURL = isMock ? config.mockApi : config.baseApi;
+    console.log(service.defaults.baseURL);
   }
   return service(options);
 }
