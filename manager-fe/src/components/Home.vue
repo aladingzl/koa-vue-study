@@ -24,7 +24,9 @@
           <div class="menu-fold" @click="toggle">
             <el-icon><fold /></el-icon>
           </div>
-          <div class="bread">面包屑</div>
+          <div class="bread">
+            <BreadCrumb />
+          </div>
         </div>
         <div class="user-info">
           <el-badge
@@ -63,13 +65,15 @@
 </template>
 
 <script>
-import TreeMenu from "./TreeMenu.vue"
+import TreeMenu from "./TreeMenu.vue";
+import BreadCrumb from "./BreadCrumb.vue";
 import { Bell, ArrowDown, Fold } from "@element-plus/icons-vue";
 export default {
   name: "Home",
   components: {
     // 组件
     TreeMenu,
+    BreadCrumb,
     // icon
     Bell,
     ArrowDown,
