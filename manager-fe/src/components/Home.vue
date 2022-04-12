@@ -68,9 +68,6 @@ export default {};
           font-size: 18px;
         }
       }
-      .user-info {
-
-      }
     }
     .wrapper {
       background: #eef0f3;
