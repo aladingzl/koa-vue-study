@@ -48,7 +48,7 @@ service.interceptors.response.use((res) => {
 // 请求函数
 
 function request(options) {
-  console.log(config);
+  // console.log(config);
   options.method = options.method || 'get';
   if(options.method.toLowerCase() === 'get') {
     options.params = options.data;
@@ -61,7 +61,7 @@ function request(options) {
     service.defaults.baseURL = config.baseApi;
   } else {
     service.defaults.baseURL = isMock ? config.mockApi : config.baseApi;
-    console.log(service.defaults.baseURL);
+    // console.log(service.defaults.baseURL);
   }
   return service(options);
 }

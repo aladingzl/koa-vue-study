@@ -47,18 +47,14 @@
                 <el-dropdown-item command="email">
                   邮箱：{{ userInfo.userEmail }}
                 </el-dropdown-item>
-                <el-dropdown-item command="logout">
-                  退出
-                </el-dropdown-item>
+                <el-dropdown-item command="logout"> 退出 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
         </div>
       </div>
       <div class="wrapper">
-        <div class="main-page">
-          <router-view></router-view>
-        </div>
+        <router-view></router-view>
       </div>
     </div>
   </div>
@@ -77,7 +73,7 @@ export default {
     // icon
     Bell,
     ArrowDown,
-    Fold
+    Fold,
   },
   data() {
     return {
@@ -98,7 +94,7 @@ export default {
     },
     // 退出
     handleLogout(key) {
-      if(key == 'email') return;
+      if (key == "email") return;
       this.$store.commit("saveUserInfo", "");
       this.userInfo = null;
       this.$router.push("/login");
@@ -117,7 +113,7 @@ export default {
       try {
         const list = await this.$api.getMenuList();
         this.userMenu = list;
-        console.log(this.userMenu);
+        // console.log(this.userMenu);
       } catch (error) {
         console.error(error);
       }
@@ -152,7 +148,7 @@ export default {
       height: calc(100vh - 50px);
       border-right: none;
     }
-     // 合并
+    // 合并
     &.fold {
       width: 64px;
     }
