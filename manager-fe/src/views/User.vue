@@ -1,17 +1,17 @@
 <template>
   <div class="user-manager">
     <div class="query-form">
-      <el-form :inline="true" :model="user">
-        <el-form-item label="用户ID">
+      <el-form ref="form" :inline="true" :model="user">
+        <el-form-item label="用户ID" prop="userId">
           <el-input v-model="user.userId" placeholder="请输入用户ID" />
         </el-form-item>
-        <el-form-item label="用户名称">
+        <el-form-item label="用户名称" prop="userName">
           <el-input
             v-model="user.userName"
             placeholder="请输入用户名称"
           ></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item label="状态" prop="state">
           <el-select v-model="user.state">
             <el-option :value="0" label="所有"></el-option>
             <el-option :value="1" label="在职"></el-option>
@@ -20,8 +20,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">查询</el-button>
-          <el-button>重置</el-button>
+          <el-button type="primary" @click="handleQuery">查询</el-button>
+          <el-button @click="handleReset">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -49,7 +49,13 @@
           </template>
         </el-table-column>
       </el-table>
-      <!-- <el-pagination></el-pagination> -->
+      <el-pagination
+        class="pagination"
+        background
+        layout="prev, pager, next"
+        :total="pager.total"
+        :page-size="pager.pageSize"
+      />
     </div>
 
     <!-- <el-dialog title="用户新增"></el-dialog> -->
@@ -136,10 +142,10 @@ export default {
 
     //获取用户列表
     const getUserList = async () => {
-      let params = { ...user, ...pager};
+      let params = { ...user, ...pager };
       try {
         // console.log(ctx.$api);
-        // console.log(proxy.$api);
+        console.log(proxy);
         const { list, page } = await proxy.$api.getUserList(params);
         userList.value = list;
         pager.total = page.total;
@@ -148,11 +154,25 @@ export default {
       }
     };
 
+    // 查询事件，获取用户列表
+    const handleQuery = () => {
+      getUserList();
+    }
+
+    // 重置查询表单
+    const handleReset = () => {
+      // TO FIXED
+      proxy.$refs.form.resetFields();
+    }
+
     return {
       user,
-      columns,
       userList,
+      columns,
+      pager,
       getUserList,
+      handleQuery,
+      handleReset
     };
   },
 };
