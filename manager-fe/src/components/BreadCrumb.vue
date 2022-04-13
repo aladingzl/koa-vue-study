@@ -1,20 +1,22 @@
 <template>
-  <el-breadcrumb :separator-icon="ArrowRight">
+  <el-breadcrumb separator="/">
     <el-breadcrumb-item v-for="(item, index) in breadList" :key="item.path">
-      <router-link to="/welcome" v-if="index == 0">{{
-        item.meta.title
-      }}</router-link>
-      <span v-else>{{ item.meta.title }}</span>
+      <router-link to="/welcome" v-if="index == 0">
+        {{ item.meta.title }}
+      </router-link>
+      <span v-else>
+        {{ item.meta.title }}
+      </span>
     </el-breadcrumb-item>
   </el-breadcrumb>
 </template>
 <script>
-import { ArrowRight } from '@element-plus/icons-vue'
+import { ArrowRight } from "@element-plus/icons-vue";
 export default {
   name: "BreadCrumb",
   components: {
     // icon
-    ArrowRight
+    ArrowRight,
   },
   computed: {
     breadList() {

@@ -4,17 +4,28 @@
 const router = require('koa-router')();
 const User = require('../models/userSchema');
 const util = require('../utils/util');
+const jwt = require('jsonwebtoken');
+
 router.prefix('/users');
 
 router.post('/login', async (ctx) => {
   try {
     const { userName, userPwd } = ctx.request.body;
+    // 返回数据库指定字段
     const res = await User.findOne({
       userName,
       userPwd
-    });
+    }, 'userId userName userEmail state role deptId roleList');
+
     if(res) {
-      ctx.body = util.success(res);
+      const data = res._doc;
+      const token = jwt.sign({
+        data
+      }, 'rp', { expiresIn: '1h' });
+
+      data.token = token;
+
+      ctx.body = util.success(data);
     } else {
       ctx.body = util.fail("账号密码不正确");
     }
