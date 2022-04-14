@@ -29,9 +29,9 @@
     <div class="base-table">
       <div class="action">
         <el-button type="primary">新增</el-button>
-        <el-button type="danger">批量删除</el-button>
+        <el-button type="danger" @click="handlePatchDel">批量删除</el-button>
       </div>
-      <el-table :data="userList">
+      <el-table :data="userList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column
           v-for="item in columns"
@@ -45,7 +45,7 @@
         <el-table-column label="操作" width="150">
           <template #default="scope">
             <el-button size="small">编辑</el-button>
-            <el-button type="danger" size="small">删除</el-button>
+            <el-button type="danger" size="small" @click="handleDel(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -82,6 +82,8 @@ export default {
       pageNum: 1,
       pageSize: 10,
     });
+    // 选中用户列表对象
+    const checkedUserIds = ref([])
     // 定义动态表格-格式
     const columns = reactive([
       {
@@ -135,10 +137,20 @@ export default {
       },
     ]);
 
+
     // 初始化接口调用
     onMounted(() => {
       getUserList();
     });
+
+    // 表格多选
+    const handleSelectionChange = (list) => {
+      let arr = [];
+      list.map((item) => {
+        arr.push(item.userId);
+      });
+      checkedUserIds.value = arr;
+    }
 
     //获取用户列表
     const getUserList = async () => {
@@ -157,26 +169,56 @@ export default {
     // 查询事件，获取用户列表
     const handleQuery = () => {
       getUserList();
-    }
+    };
 
     // 重置查询表单
     const handleReset = () => {
       // TO FIXED
       proxy.$refs.form.resetFields();
+    };
+
+    // 用户单个删除
+    const handleDel = async (row) => {
+      await proxy.$api.userDel({
+        userIds: [row.userId],
+      });
+      proxy.$message.success("删除成功");
+      getUserList();
+    }
+
+    // 批量删除
+    const handlePatchDel = async () => {
+      if(checkedUserIds.value.length == 0) {
+        proxy.$message.error("请选择要删除的用户");
+        return;
+      }
+      const res = await proxy.$api.userDel({
+        userIds: checkedUserIds.value,
+      });
+      if(res.nModified > 0) {
+        proxy.$message.success("删除成功");
+        getUserList();
+      } else {
+        proxy.$message.success("xiuga失败")
+      }
     }
 
     return {
       user,
       userList,
+      checkedUserIds,
       columns,
       pager,
       getUserList,
       handleQuery,
-      handleReset
+      handleReset,
+      handleDel,
+      handlePatchDel,
+      handleSelectionChange
     };
   },
 };
 </script>
 
-<style>
+<style lang="scss">
 </style>
