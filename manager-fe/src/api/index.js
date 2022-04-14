@@ -37,7 +37,7 @@ export default {
       url: '/users/list',
       method: 'get',
       data: params,
-      mock: true
+      // mock: true
     })
   },
   // 用户删除
@@ -72,7 +72,7 @@ export default {
       url: '/users/operate',
       method: 'post',
       data: params,
-      mock: false
+      mock: true
     })
   },
 }

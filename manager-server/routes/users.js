@@ -33,6 +33,32 @@ router.post('/login', async (ctx) => {
     ctx.body = util.fail(error.msg);
   }
 })
+// 用户列表
+router.get('/list', async (ctx) => {
+  const { userId, userName, state } = ctx.request.query;
+  const { page, skipIndex } = util.paper(ctx.request.query);
+  let params = {};
+  if(userId) params.userId = userId;
+  if(userName) params.userName = userName;
+  if(state && state != '0') params.state = state;
+  try {
+    // 根据条件查询用户列表
+    const query = User.find(params, {_id: 0, userPwd: 0 });
+    // 从哪开始查，限制数目
+    const list = await query.skip(skipIndex).limit(page.pageSize);
+    // 统计数目
+    const total = await User.countDocuments(params);
 
+    ctx.body = util.success({
+      page: {
+        ...page,
+        total
+      },
+      list
+    })
+  } catch (error) {
+    ctx.body = util.fail(`查询异常：${error.stack}`);
+  }
+})
 
 module.exports = router

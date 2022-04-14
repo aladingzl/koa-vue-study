@@ -146,7 +146,7 @@
 import { ref, reactive, onMounted, getCurrentInstance, toRaw } from "vue";
 import utils from "../utils/utils";
 export default {
-  name: "user",
+  name: "User",
   setup() {
     // 获取 api 上下文对象
     // ctx 拿不到？
@@ -272,9 +272,10 @@ export default {
     //获取用户列表
     const getUserList = async () => {
       let params = { ...user, ...pager };
+      console.log(params);
       try {
         // console.log(ctx.$api);
-        console.log(proxy);
+        // console.log(proxy);
         const { list, page } = await proxy.$api.getUserList(params);
         userList.value = list;
         pager.total = page.total;
@@ -293,7 +294,7 @@ export default {
     // 获取部门列表
     const getDeptList = async () => {
       let list = await proxy.$api.getDeptList();
-      console.log(list);
+      // console.log(list);
       deptList.value = list;
     }
 

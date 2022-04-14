@@ -45,7 +45,7 @@ app.use(async (ctx, next) => {
 })
 
 app.use(koajwt({ secret: 'rp'}).unless({
-  path: [/^\/user\/login/]
+  path: [/^\/api\/users\/login/]
 }))
 
 // 这里
