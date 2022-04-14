@@ -44,7 +44,7 @@
         </el-table-column>
         <el-table-column label="操作" width="150">
           <template #default="scope">
-            <el-button size="small">编辑</el-button>
+            <el-button size="small" @click="handleEdit(scope.row)">编辑</el-button>
             <el-button type="danger" size="small" @click="handleDel(scope.row)"
               >删除</el-button
             >
@@ -151,13 +151,23 @@ export default {
     // 获取 api 上下文对象
     // ctx 拿不到？
     const { ctx, proxy } = getCurrentInstance();
+    // 初始化用户列表数据
+    const userList = ref([]);
+    // 选中用户列表对象
+    const checkedUserIds = ref([]);
+    // 弹窗显示
+    const showModal = ref(false);
+    // 定义用户操作行为
+    const action = ref("add");
+    // 所有用户列表
+    const roleList = ref([]);
+    // 所有部门列表
+    const deptList = ref([]);
     // 初始化用户表单对象
     const user = reactive({
       state: 1,
     });
-    // 初始化用户列表数据
-    const userList = ref([]);
-    //
+    // 新增用户 Form 对象
     const userForm = reactive({
       state: 3,
     });
@@ -166,16 +176,6 @@ export default {
       pageNum: 1,
       pageSize: 10,
     });
-    // 选中用户列表对象
-    const checkedUserIds = ref([]);
-    //
-    const showModal = ref(false);
-    // 定义用户操作行为
-    const action = ref("add");
-    // 所有用户列表
-    const roleList = ref([]);
-    // 所有部门列表
-    const deptList = ref([]);
     // 定义表单校验规则
     const rules = reactive({
       userName: [
@@ -260,6 +260,7 @@ export default {
       },
     ]);
 
+
     // 初始化接口调用
     onMounted(() => {
       getUserList();
@@ -267,14 +268,6 @@ export default {
       getDeptList();
     });
 
-    // 表格多选
-    const handleSelectionChange = (list) => {
-      let arr = [];
-      list.map((item) => {
-        arr.push(item.userId);
-      });
-      checkedUserIds.value = arr;
-    };
 
     //获取用户列表
     const getUserList = async () => {
@@ -315,6 +308,15 @@ export default {
       proxy.$refs[strRef].resetFields();
     };
 
+    // 表格多选
+    const handleSelectionChange = (list) => {
+      let arr = [];
+      list.map((item) => {
+        arr.push(item.userId);
+      });
+      checkedUserIds.value = arr;
+    };
+
     // 用户单个删除
     const handleDel = async (row) => {
       await proxy.$api.userDel({
@@ -324,7 +326,7 @@ export default {
       getUserList();
     };
 
-    // 批量删除
+    // 用户批量删除
     const handlePatchDel = async () => {
       if (checkedUserIds.value.length == 0) {
         proxy.$message.error("请选择要删除的用户");
@@ -341,14 +343,25 @@ export default {
       }
     };
 
-    // 新增用户
+    // 用户编辑
+    const handleEdit = (row) => {
+      action.value = "edit";
+      showModal.value = true;
+      proxy.$nextTick(() => {
+        Object.assign(userForm, row);
+      });
+    };
+
+    // 用户新增
     const handleCreate = () => {
+      // action.value = "add";
       showModal.value = true;
     };
 
-    // 
+    // 弹窗关闭
     const handleClose = () => {
       showModal.value = false;
+      handleReset('dialogForm')
     };
 
     // 用户提交
@@ -375,20 +388,22 @@ export default {
       columns,
       pager,
       rules,
-      getUserList,
-      handleQuery,
-      handleReset,
-      handleDel,
-      handlePatchDel,
-      handleSelectionChange,
-      handleCreate,
-      handleClose,
-      handleSubmit,
       showModal,
       action,
       roleList,
       deptList,
-      getRoleList
+      getUserList,
+      getRoleList,
+      getDeptList,
+      handleQuery,
+      handleReset,
+      handleDel,
+      handlePatchDel,
+      handleEdit,
+      handleSelectionChange,
+      handleCreate,
+      handleClose,
+      handleSubmit,
     };
   },
 };
