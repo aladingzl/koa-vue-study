@@ -31,6 +31,15 @@ export default {
       mock: false
     })
   },
+  // 用户提交
+  userSubmit(params) {
+    return request({
+      url: '/users/operate',
+      method: 'post',
+      data: params,
+      mock: false
+    })
+  },
   // 通知数量
   noticeCount(params) {
     return request({
@@ -67,12 +76,5 @@ export default {
       mock: true
     })
   },
-  userSubmit(params) {
-    return request({
-      url: '/users/operate',
-      method: 'post',
-      data: params,
-      mock: true
-    })
-  },
+
 }
