@@ -272,7 +272,7 @@ export default {
     //获取用户列表
     const getUserList = async () => {
       let params = { ...user, ...pager };
-      console.log(params);
+      // console.log(params);
       try {
         // console.log(ctx.$api);
         // console.log(proxy);
@@ -336,7 +336,8 @@ export default {
       const res = await proxy.$api.userDel({
         userIds: checkedUserIds.value,
       });
-      if (res.nModified > 0) {
+      // v5.x nModified
+      if (res.modifiedCount > 0) {
         proxy.$message.success("删除成功");
         getUserList();
       } else {

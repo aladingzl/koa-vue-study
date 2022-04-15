@@ -7,7 +7,7 @@ const util = require('../utils/util');
 const jwt = require('jsonwebtoken');
 
 router.prefix('/users');
-
+// 用户登录
 router.post('/login', async (ctx) => {
   try {
     const { userName, userPwd } = ctx.request.body;
@@ -60,5 +60,16 @@ router.get('/list', async (ctx) => {
     ctx.body = util.fail(`查询异常：${error.stack}`);
   }
 })
-
+// 用户删除、批量删除
+router.post('/delete', async (ctx) => {
+  const { userIds } = ctx.request.body;
+  // 软删除
+  const res = await User.updateMany({ userId: { $in: userIds } }, { state: 2 });
+  // v5.x nModified
+  if(res.modifiedCount) {
+    ctx.body = util.success(res, `共删除成功${res.modifiedCount}条`);
+    return;
+  }
+  ctx.body = util.fail('删除失败')
+})
 module.exports = router
