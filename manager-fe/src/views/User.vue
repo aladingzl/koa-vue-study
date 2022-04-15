@@ -1,5 +1,5 @@
 <template>
-  <div class="user-manager">
+  <div class="user-manage">
     <div class="query-form">
       <el-form ref="form" :inline="true" :model="user">
         <el-form-item label="用户ID" prop="userId">
@@ -349,6 +349,7 @@ export default {
     const handleEdit = (row) => {
       action.value = "edit";
       showModal.value = true;
+      // 注意这里
       proxy.$nextTick(() => {
         Object.assign(userForm, row);
       });
