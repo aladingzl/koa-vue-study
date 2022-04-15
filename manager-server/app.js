@@ -44,10 +44,9 @@ app.use(async (ctx, next) => {
   })
 })
 
-app.use(koajwt({ secret: 'rp'}).unless({
+app.use(koajwt({ secret: 'rp' }).unless({
   path: [/^\/api\/users\/login/]
 }))
-
 // 这里
 router.prefix("/api");
 

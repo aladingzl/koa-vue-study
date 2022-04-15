@@ -13,6 +13,24 @@ export default {
       // mock: true
     })
   },
+  // 获取用户列表
+  getUserList(params) {
+    return request({
+      url: '/users/list',
+      method: 'get',
+      data: params,
+      mock: false
+    })
+  },
+  // 用户删除
+  userDel(params) {
+    return request({
+      url: '/users/delete',
+      method: 'post',
+      data: params,
+      mock: true
+    })
+  },
   // 通知数量
   noticeCount(params) {
     return request({
@@ -28,24 +46,6 @@ export default {
       url: '/menu/list',
       method: 'get',
       data: {},
-      mock:true
-    })
-  },
-  // 获取用户列表
-  getUserList(params) {
-    return request({
-      url: '/users/list',
-      method: 'get',
-      data: params,
-      // mock: true
-    })
-  },
-  // 用户删除
-  userDel(params) {
-    return request({
-      url: '/users/delete',
-      method: 'post',
-      data: params,
       mock: true
     })
   },

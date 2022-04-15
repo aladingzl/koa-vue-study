@@ -22,7 +22,8 @@ service.interceptors.request.use((req) => {
   const headers = req.headers;
   const { token } = storage.getItem('userInfo');
   if(!headers.Authorization) {
-    headers.Authorization = 'Bearer' + token;
+    // 一个空格引发的血案
+    headers.Authorization = 'Bearer ' + token;
   }
   return req;
 })
