@@ -91,7 +91,7 @@
           prop="icon"
           v-show="menuForm.menuType == 1"
         >
-          <el-input v-model="menuForm.icon" placeholder="请输入岗位" />
+          <el-input v-model="menuForm.icon" placeholder="请输入菜单图标" />
         </el-form-item>
         <el-form-item
           label="路由地址"
@@ -128,7 +128,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="">确 定</el-button>
+          <el-button type="primary" @click="handleSubmit">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -250,6 +250,7 @@ export default {
     },
     // 菜单编辑
     handleEdit(row) {
+      // console.log(row);
       this.showModal = true;
       this.action = "edit";
       this.$nextTick(() => {
@@ -257,8 +258,8 @@ export default {
       });
     },
     // 菜单删除
-    async handleDel(id) {
-      this.$api.menuSubmit({ id, action: "delete" });
+    async handleDel(_id) {
+      this.$api.menuSubmit({ _id, action: "delete" });
       this.$message.success("删除成功");
       this.getMenuList();
     },

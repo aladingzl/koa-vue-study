@@ -10,7 +10,7 @@ export default {
       url: '/users/login',
       method: 'post',
       data: params,
-      mock: true
+      mock: false
     })
   },
   // 获取用户列表
@@ -40,21 +40,30 @@ export default {
       mock: true
     })
   },
-  // 通知数量
-  noticeCount(params) {
-    return request({
-      url: '/leave/count',
-      method: 'get',
-      data: {},
-      mock: true
-    })
-  },
   // 获取菜单
   getMenuList(params) {
     return request({
       url: '/menu/list',
       method: 'get',
       data: params,
+      mock: true
+    })
+  },
+  // 菜单创建/编辑/删除
+  menuSubmit(params) {
+    return request({
+      url: '/menu/operate',
+      method: 'post',
+      data: params,
+      mock: true
+    })
+  },
+  // 通知数量
+  noticeCount(params) {
+    return request({
+      url: '/leave/count',
+      method: 'get',
+      data: {},
       mock: true
     })
   },
@@ -76,14 +85,5 @@ export default {
       mock: true
     })
   },
-  // 菜单创建/编辑/删除
-  menuSubmit(params) {
-    return request({
-      url: '/menu/operate',
-      method: 'post',
-      data: params,
-      mock: true
-    })
-  }
 
 }

@@ -11,10 +11,10 @@ const jwt = require('jsonwebtoken');
 const koajwt = require('koa-jwt');
 const util = require('./utils/util');
 const users = require('./routes/users');
+const menus = require('./routes/menus')
 
 // error handler
 onerror(app)
-
 // 数据库
 require('./config/db');
 // 中间件概念
@@ -51,7 +51,8 @@ app.use(koajwt({ secret: 'rp' }).unless({
 router.prefix("/api");
 
 router.use(users.routes(), users.allowedMethods());
-// app.use(index.routes(), index.allowedMethods())
+router.use(menus.routes(), menus.allowedMethods());
+
 app.use(router.routes(), users.allowedMethods());
 
 // error-handling
