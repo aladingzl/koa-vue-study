@@ -68,11 +68,20 @@ export default {
     })
   },
   // 获取角色名称列表
-  getRoleList() {
+  getAllRoleList() {
     return request({
       url: '/roles/allList',
       method: 'get',
       data: {},
+      mock: true
+    })
+  },
+  // 获取角色列表
+  getRoleList(params) {
+    return request({
+      url: '/roles/list',
+      method: 'get',
+      data: params,
       mock: true
     })
   },
@@ -85,5 +94,13 @@ export default {
       mock: true
     })
   },
+  roleOperate(params) {
+    return request({
+      url: '/roles/operate',
+      method: 'post',
+      data: params,
+      mock: true
+    })
+  }
 
 }

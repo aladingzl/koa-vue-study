@@ -1,9 +1,11 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import {
+  createRouter,
+  createWebHashHistory
+} from 'vue-router';
 // hash Nginx 不需要配置
 import Home from '@/components/Home.vue';
 
-const routes = [
-  {
+const routes = [{
     name: 'home',
     path: '/',
     meta: {
@@ -11,8 +13,7 @@ const routes = [
     },
     component: Home,
     redirect: '/welcome',
-    children: [
-      {
+    children: [{
         name: 'welcome',
         path: '/welcome',
         meta: {
@@ -27,13 +28,22 @@ const routes = [
           title: '用户管理'
         },
         component: () => import('@/views/User.vue')
-      }, {
+      },
+      {
         name: 'menu',
         path: '/system/menu',
         meta: {
           title: '菜单管理'
         },
         component: () => import('@/views/Menu.vue')
+      },
+      {
+        name: 'role',
+        path: '/system/role',
+        meta: {
+          title: '菜单角色管理'
+        },
+        component: () => import('@/views/Role.vue')
       }
     ]
   },

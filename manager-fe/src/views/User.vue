@@ -44,7 +44,9 @@
         </el-table-column>
         <el-table-column label="操作" width="150">
           <template #default="scope">
-            <el-button size="small" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button size="small" @click="handleEdit(scope.row)"
+              >编辑</el-button
+            >
             <el-button type="danger" size="small" @click="handleDel(scope.row)"
               >删除</el-button
             >
@@ -60,19 +62,15 @@
       />
     </div>
     <!-- Modal -->
-    <el-dialog 
-      title="用户新增" 
-      v-model="showModal"
-        
-    >
-      <el-form 
+    <el-dialog title="用户新增" v-model="showModal">
+      <el-form
         ref="dialogForm"
         :model="userForm"
         label-width="100px"
         :rules="rules"
       >
         <el-form-item label="用户名" prop="userName">
-          <el-input 
+          <el-input
             v-model="userForm.userName"
             :disabled="action == 'edit'"
             placeholder="请输入用户名称"
@@ -88,16 +86,10 @@
           </el-input>
         </el-form-item>
         <el-form-item label="手机号" prop="mobile">
-          <el-input
-            v-model="userForm.mobile"
-            placeholder="请输入手机号"
-          />
+          <el-input v-model="userForm.mobile" placeholder="请输入手机号" />
         </el-form-item>
         <el-form-item label="岗位" prop="job">
-          <el-input
-            v-model="userForm.job"
-            placeholder="请输入岗位"
-          /> 
+          <el-input v-model="userForm.job" placeholder="请输入岗位" />
         </el-form-item>
         <el-form-item label="状态" prop="state">
           <el-select v-model="userForm.state">
@@ -107,11 +99,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="系统角色" prop="roleList">
-          <el-select 
+          <el-select
             v-model="userForm.roleList"
             placeholder="请选择系统角色"
             multiple
-            style="width: 100%"  
+            style="width: 100%"
           >
             <el-option
               v-for="role in roleList"
@@ -186,10 +178,10 @@ export default {
         },
       ],
       userEmail: [
-        { 
-          required: true, 
-          message: "请输入用户邮箱", 
-          trigger: "blur" 
+        {
+          required: true,
+          message: "请输入用户邮箱",
+          trigger: "blur",
         },
       ],
       mobile: [
@@ -260,14 +252,12 @@ export default {
       },
     ]);
 
-
     // 初始化接口调用
     onMounted(() => {
       getUserList();
-      getRoleList();
+      getAllRoleList();
       getDeptList();
     });
-
 
     //获取用户列表
     const getUserList = async () => {
@@ -285,18 +275,18 @@ export default {
     };
 
     // 获取角色列表
-    const getRoleList = async () => {
-      let list = await proxy.$api.getRoleList();
+    const getAllRoleList = async () => {
+      let list = await proxy.$api.getAllRoleList();
       // console.log(list);
       roleList.value = list;
-    }
+    };
 
     // 获取部门列表
     const getDeptList = async () => {
       let list = await proxy.$api.getDeptList();
       // console.log(list);
       deptList.value = list;
-    }
+    };
 
     // 查询事件，获取用户列表
     const handleQuery = () => {
@@ -364,24 +354,24 @@ export default {
     // 弹窗关闭
     const handleClose = () => {
       showModal.value = false;
-      handleReset('dialogForm')
+      handleReset("dialogForm");
     };
 
     // 用户提交
     const handleSubmit = () => {
       proxy.$refs.dialogForm.validate(async (valid) => {
-        if(valid) {
+        if (valid) {
           let params = toRaw(userForm);
           params.userEmail += "@rp.com";
           params.action = action.value;
           let res = proxy.$api.userSubmit(params);
           showModal.value = false;
           await proxy.$message.success("用户创建成功");
-          handleReset('dialogForm');
+          handleReset("dialogForm");
           getUserList();
         }
-      })
-    }
+      });
+    };
 
     return {
       user,
@@ -396,7 +386,7 @@ export default {
       roleList,
       deptList,
       getUserList,
-      getRoleList,
+      getAllRoleList,
       getDeptList,
       handleQuery,
       handleReset,
