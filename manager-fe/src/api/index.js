@@ -101,6 +101,15 @@ export default {
       data: params,
       mock: true
     })
+  },
+  // 更新权限
+  updatePermission(params) {
+    return request({
+      url: '/roles/update/permission',
+      method: 'post',
+      data: params,
+      mock: true
+    })
   }
 
 }

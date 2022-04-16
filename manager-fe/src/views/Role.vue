@@ -34,7 +34,12 @@
             <el-button size="small" @click="handleEdit(scope.row)"
               >编辑</el-button
             >
-            <el-button type="primary" size="small">设置权限</el-button>
+            <el-button
+              type="primary"
+              size="small"
+              @click="handleOpenPermission(scope.row)"
+              >设置权限</el-button
+            >
             <el-button
               type="danger"
               size="small"
@@ -82,6 +87,30 @@
         </span>
       </template>
     </el-dialog>
+    <!-- Permission Modal -->
+    <el-dialog title="设置权限" v-model="showPermissionModal">
+      <el-form label-width="100px">
+        <el-form-item label="角色名称">
+          {{ curRoleName }}
+        </el-form-item>
+        <el-form-item label="选择权限">
+          <el-tree
+            ref="permisssionTreeRef"
+            :data="menuList"
+            show-checkbox
+            node-key="_id"
+            default-expand-all
+            :props="{ label: 'menuName' }"
+          ></el-tree>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="showPermissionModal = false">取 消</el-button>
+          <el-button type="primary" @click="handlePermissionSubmit">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -117,11 +146,13 @@ export default {
         },
       ],
       roleList: [],
+      menuList: [],
       pager: {
         pageNum: 1,
         pageSize: 10,
       },
       showModal: false,
+      showPermissionModal: false,
       roleForm: {},
       rules: {
         roleName: [
@@ -132,10 +163,13 @@ export default {
         ],
       },
       action: "create",
+      curRoleId: "",
+      curRoleName: "",
     };
   },
   mounted() {
     this.getRoleList();
+    this.getMenuList();
   },
   methods: {
     // 角色列表初始化
@@ -144,6 +178,15 @@ export default {
         let { list, page } = await this.$api.getRoleList(this.queryForm);
         this.roleList = list;
         // console.log(this.roleList);
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    //
+    async getMenuList() {
+      try {
+        let list = await this.$api.getMenuList();
+        this.menuList = list;
       } catch (error) {
         throw new Error(error);
       }
@@ -187,10 +230,49 @@ export default {
         }
       });
     },
+    // 更新权限节点
+    async handlePermissionSubmit() {
+      let nodes = this.$refs.permisssionTreeRef.getCheckedNodes();
+      let halfKeys = this.$refs.permisssionTreeRef.getHalfCheckedKeys();
+      let checkedKeys = [];
+      let parentKeys = [];
+      // 菜单、按钮分开
+      nodes.map((node) => {
+        if(!node.children) {
+          checkedKeys.push(node._id);
+        } else {
+          parentKeys.push(node._id);
+        }
+      });
+      let params = {
+        _id: this.curRoleId,
+        permissionList: {
+          checkedKeys,
+          halfCheckedKeys: parentKeys.concat(halfKeys)
+        }
+      }
+      await this.$api.updatePermission(params);
+      this.showPermissionModal = false;
+      this.$message.success("设置成功");
+      this.getRoleList();
+    },
     // 弹窗关闭
     handleClose() {
       this.showModal = false;
       this.handleReset("dialogForm");
+    },
+    //
+    handleCurrentChange() {},
+    // 权限弹框
+    handleOpenPermission(row) {
+      this.curRoleId = row._id;
+      this.curRoleName = row.roleName;
+      this.showPermissionModal = true;
+      let { checkedKeys } = row.permissionList;
+      // console.log(this.$refs);
+      setTimeout(() => {
+        this.$refs.permisssionTreeRef.setCheckedKeys(checkedKeys);
+      }, 0);
     },
   },
 };
