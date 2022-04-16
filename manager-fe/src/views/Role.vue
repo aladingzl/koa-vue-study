@@ -127,7 +127,6 @@ export default {
         {
           label: "角色名称",
           prop: "roleName",
-          width: 150,
         },
         {
           label: "备注",
@@ -136,6 +135,16 @@ export default {
         {
           label: "权限列表",
           prop: "permissionList",
+          formatter: (row, column, value) => {
+            let names = [];
+            let list = value.halfCheckedKeys || [];
+            list.map(key => {
+              if(key) {
+                names.push(this.actionMap[key]);
+              }
+              return names.join(',');
+            })
+          }
         },
         {
           label: "创建时间",
@@ -165,6 +174,7 @@ export default {
       action: "create",
       curRoleId: "",
       curRoleName: "",
+      actionMap: {},
     };
   },
   mounted() {
@@ -182,11 +192,13 @@ export default {
         throw new Error(error);
       }
     },
-    //
+    // 菜单列表初始化
     async getMenuList() {
       try {
         let list = await this.$api.getMenuList();
         this.menuList = list;
+        // 映射
+        this.getActionMap(list);
       } catch (error) {
         throw new Error(error);
       }
@@ -273,6 +285,22 @@ export default {
       setTimeout(() => {
         this.$refs.permisssionTreeRef.setCheckedKeys(checkedKeys);
       }, 0);
+    },
+    getActionMap(list) {
+      let actionMap = {};
+      const deep = (arr) => {
+        while(arr.length) {
+          let item = arr.pop();
+          if(item.children && item.action) {
+            actionMap[item._id] = item.menuName;
+          }
+          if(item.children && !item.action) {
+            deep(item.children);
+          }
+        }
+      }
+      deep(JSON.parse(JSON.stringify(list)));
+      this.actionMap = actionMap;
     },
   },
 };
