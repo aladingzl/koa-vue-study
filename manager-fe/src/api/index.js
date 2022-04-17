@@ -4,6 +4,7 @@
 import request from '../utils/request';
 
 export default {
+  /**登录 */
   // 登录请求
   login(params) {
     return request({
@@ -13,6 +14,8 @@ export default {
       mock: false
     })
   },
+
+  /**用户管理 */
   // 获取用户列表
   getUserList(params) {
     return request({
@@ -40,6 +43,8 @@ export default {
       mock: true
     })
   },
+
+  /**菜单管理 */
   // 获取菜单
   getMenuList(params) {
     return request({
@@ -58,13 +63,27 @@ export default {
       mock: true
     })
   },
-  // 通知数量
-  noticeCount(params) {
+
+  /**部门管理 */
+  // 获取部门列表
+  getDeptList() {
     return request({
-      url: '/leave/count',
+      url: '/dept/list',
       method: 'get',
       data: {},
       mock: true
+    })
+  },
+
+  
+  /**角色管理 */
+  // 获取角色列表
+  getRoleList(params) {
+    return request({
+      url: '/roles/list',
+      method: 'get',
+      data: params,
+      mock: false
     })
   },
   // 获取角色名称列表
@@ -76,24 +95,7 @@ export default {
       mock: true
     })
   },
-  // 获取角色列表
-  getRoleList(params) {
-    return request({
-      url: '/roles/list',
-      method: 'get',
-      data: params,
-      mock: false
-    })
-  },
-  // 获取部门列表
-  getDeptList() {
-    return request({
-      url: '/dept/list',
-      method: 'get',
-      data: {},
-      mock: true
-    })
-  },
+  // 角色操作
   roleOperate(params) {
     return request({
       url: '/roles/operate',
@@ -110,6 +112,16 @@ export default {
       data: params,
       mock: false
     })
-  }
+  },
 
+  /**审批管理 */
+  // 通知数量
+  noticeCount(params) {
+    return request({
+      url: '/leave/count',
+      method: 'get',
+      data: {},
+      mock: true
+    })
+  },
 }
