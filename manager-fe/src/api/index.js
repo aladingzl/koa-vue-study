@@ -74,6 +74,24 @@ export default {
       mock: true
     })
   },
+  // 
+  getDeptUserList() {
+    return request({
+      url: '/users/all/list',
+      method: 'get',
+      data: {},
+      mock: true
+    })
+  },
+  // 
+  deptOperate(params) {
+    return request({
+      url: '/dept/operate',
+      method: 'post',
+      data: params,
+      mock: true
+    })
+  },
 
   
   /**角色管理 */

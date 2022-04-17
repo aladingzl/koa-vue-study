@@ -16,7 +16,7 @@
     </div>
     <div class="base-table">
       <div class="action">
-        <el-button type="primary">创建</el-button>
+        <el-button type="primary" @click="handleCreate">创建</el-button>
       </div>
       <el-table
         :data="deptList"
@@ -37,7 +37,7 @@
               @click="handleEdit(scope.row)"
               >编辑</el-button
             >
-            <el-button size="small" type="danger" @click="handleDel(scope.row)"
+            <el-button size="small" type="danger" @click="handleDel(scope.row._id)"
               >删除</el-button
             >
           </template>
@@ -45,6 +45,60 @@
       </el-table>
     </div>
   </div>
+  <!-- Modal -->
+  <el-dialog
+    :title="action == 'create' ? '创建部门' : '编辑部门'"
+    v-model="showModal"
+  >
+    <el-form
+      ref="dialogForm"
+      :model="deptForm"
+      label-width="120px"
+      :rules="rules"
+    >
+      <el-form-item label="上级部门" prop="parentId">
+        <el-cascader
+          placeholder="请选择上级部门"
+          v-model="deptForm.parentId"
+          :options="deptList"
+          :props="{ checkStrictly: true, value: '_id', label: 'deptName' }"
+          clearable
+          :show-all-levels="false"
+        >
+        </el-cascader>
+      </el-form-item>
+      <el-form-item label="部门名称" prop="deptName">
+        <el-input placeholder="请输入部门名称" v-model="deptForm.deptName" />
+      </el-form-item>
+      <el-form-item label="负责人" prop="deptUser">
+        <el-select
+          placeholder="请选择部门负责人"
+          v-model="deptForm.deptUser"
+          @change="handleUser"
+        >
+          <el-option
+            v-for="item in deptUserList"
+            :key="item.userId"
+            :label="item.userName"
+            :value="`${item.userId}/${item.userName}/${item.userEmail}`"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="负责人邮箱" prop="userEmail">
+        <el-input
+          placeholder="请输入邮箱"
+          v-model="deptForm.userEmail"
+          disabled
+        />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="handleSubmit">确 定</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -74,14 +128,42 @@ export default {
         },
       ],
       deptList: [],
+      deptForm: {},
       pager: {
         pageNum: 0,
         pageSize: 10,
       },
+      showModal: false,
+      action: "",
+      rules: {
+        parentId: [
+          {
+            required: true,
+            message: "请选择上级部门",
+            trigger: "blur",
+          },
+        ],
+        deptName: [
+          {
+            required: true,
+            message: "请选择部门名称",
+            trigger: "blur",
+          },
+        ],
+        deptUser: [
+          {
+            required: true,
+            message: "请选择负责人",
+            trigger: "blur",
+          },
+        ],
+      },
+      deptUserList: [],
     };
   },
   mounted() {
     this.getDeptList();
+    this.getDeptUserList();
   },
   methods: {
     async getDeptList() {
@@ -91,8 +173,53 @@ export default {
       });
       this.deptList = list;
     },
+    async getDeptUserList() {
+      this.deptUserList = await this.$api.getDeptUserList();
+      // console.log(this.deptUserList);
+    },
     handleReset(strRef) {
       this.$refs[strRef].resetFields();
+    },
+    handleUser(value) {
+      const [userId, userName, userEmail] = value.split("/");
+      Object.assign(this.deptForm, { userId, userName, userEmail });
+    },
+    handleCreate() {
+      this.action = "create";
+      this.showModal = true;
+    },
+    handleEdit(row) {
+      this.action = "edit";
+      this.showModal = true;
+      this.$nextTick(() => {
+        Object.assign(this.deptForm, row, {
+          deptUser: `${row.userId}/${row.userName}/${row.userEmail}`,
+        })
+      })
+    },
+    async handleDel(_id) {
+      this.action = "delete";
+      await this.$api.deptOperate({ _id, action: this.action });
+      this.$message.success("删除成功");
+      this.getDeptList();
+    },
+    handleClose() {
+      this.showModal = false;
+      this.handleReset("dialogForm");
+    },
+    handleSubmit() {
+      this.$refs.dialogForm.validate(async (valid) => {
+        if (valid) {
+          let params = { ...this.deptForm, action: this.action };
+          delete params.deptUser;
+          let res = await this.$api.deptOperate(params);
+          if (res) {
+            this.$message.success("操作成功");
+            this.handleClose();
+            this.getDeptList();
+          }
+        }
+      });
     },
   },
 };
