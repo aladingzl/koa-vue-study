@@ -147,6 +147,7 @@ export default {
               }
               return names.join(",");
             });
+            
           },
         },
         {
@@ -213,6 +214,7 @@ export default {
       try {
         let list = await this.$api.getMenuList();
         this.menuList = list;
+        // console.log(list);
         // 映射
         this.getActionMap(list);
       } catch (error) {
@@ -259,7 +261,7 @@ export default {
         }
       });
     },
-    // 更新权限节点
+    // 更新权限
     async handlePermissionSubmit() {
       let nodes = this.$refs.permisssionTreeRef.getCheckedNodes();
       let halfKeys = this.$refs.permisssionTreeRef.getHalfCheckedKeys();
@@ -280,6 +282,7 @@ export default {
           halfCheckedKeys: parentKeys.concat(halfKeys),
         },
       };
+      console.log(params);
       await this.$api.updatePermission(params);
       this.showPermissionModal = false;
       this.$message.success("设置成功");
@@ -323,6 +326,7 @@ export default {
       };
       deep(JSON.parse(JSON.stringify(list)));
       this.actionMap = actionMap;
+      console.log(this.actionMap);
     },
   },
 };
