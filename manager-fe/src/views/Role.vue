@@ -55,6 +55,7 @@
         layout="prev, pager, next"
         :total="pager.total"
         :page-size="pager.pageSize"
+        @current-change="handleCurrentChange"
       />
     </div>
     <!-- Modal -->
@@ -107,7 +108,9 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="showPermissionModal = false">取 消</el-button>
-          <el-button type="primary" @click="handlePermissionSubmit">确 定</el-button>
+          <el-button type="primary" @click="handlePermissionSubmit"
+            >确 定</el-button
+          >
         </span>
       </template>
     </el-dialog>
@@ -138,13 +141,13 @@ export default {
           formatter: (row, column, value) => {
             let names = [];
             let list = value.halfCheckedKeys || [];
-            list.map(key => {
-              if(key) {
+            list.map((key) => {
+              if (key) {
                 names.push(this.actionMap[key]);
               }
-              return names.join(',');
-            })
-          }
+              return names.join(",");
+            });
+          },
         },
         {
           label: "创建时间",
@@ -153,10 +156,18 @@ export default {
             return utils.formateDate(new Date(value));
           },
         },
+        {
+          label: "更新时间",
+          prop: "updateTime",
+          formatter(row, column, value) {
+            return utils.formateDate(new Date(value));
+          },
+        },
       ],
       roleList: [],
       menuList: [],
       pager: {
+        total: 0,
         pageNum: 1,
         pageSize: 10,
       },
@@ -186,9 +197,13 @@ export default {
     async getRoleList() {
       try {
         // let pager = this.pager;
-        let { list, page } = await this.$api.getRoleList({ ...this.queryForm, ...this.pager });
+        let { list, page } = await this.$api.getRoleList({
+          ...this.queryForm,
+          ...this.pager,
+        });
         this.roleList = list;
         // console.log(this.roleList);
+        this.pager.total= page.total;
       } catch (error) {
         throw new Error(error);
       }
@@ -214,7 +229,7 @@ export default {
       this.action = "edit";
       this.showModal = true;
       this.$nextTick(() => {
-        this.roleForm = row;
+        this.roleForm = { _id: row._id, roleName: row.roleName, remark: row.remark };
       });
     },
     // 表单重置
@@ -252,7 +267,7 @@ export default {
       let parentKeys = [];
       // 菜单、按钮分开
       nodes.map((node) => {
-        if(!node.children) {
+        if (!node.children) {
           checkedKeys.push(node._id);
         } else {
           parentKeys.push(node._id);
@@ -262,9 +277,9 @@ export default {
         _id: this.curRoleId,
         permissionList: {
           checkedKeys,
-          halfCheckedKeys: parentKeys.concat(halfKeys)
-        }
-      }
+          halfCheckedKeys: parentKeys.concat(halfKeys),
+        },
+      };
       await this.$api.updatePermission(params);
       this.showPermissionModal = false;
       this.$message.success("设置成功");
@@ -276,7 +291,11 @@ export default {
       this.handleReset("dialogForm");
     },
     //
-    handleCurrentChange() {},
+    // 翻页
+    handleCurrentChange (current) {
+      this.pager.pageNum = current;
+      this.getUserList();
+    },
     // 权限弹框
     handleOpenPermission(row) {
       this.curRoleId = row._id;
@@ -292,16 +311,16 @@ export default {
     getActionMap(list) {
       let actionMap = {};
       const deep = (arr) => {
-        while(arr.length) {
+        while (arr.length) {
           let item = arr.pop();
-          if(item.children && item.action) {
+          if (item.children && item.action) {
             actionMap[item._id] = item.menuName;
           }
-          if(item.children && !item.action) {
+          if (item.children && !item.action) {
             deep(item.children);
           }
         }
-      }
+      };
       deep(JSON.parse(JSON.stringify(list)));
       this.actionMap = actionMap;
     },

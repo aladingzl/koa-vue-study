@@ -59,6 +59,7 @@
         layout="prev, pager, next"
         :total="pager.total"
         :page-size="pager.pageSize"
+        @current-change="handleCurrentChange"
       />
     </div>
     <!-- Modal -->
@@ -372,6 +373,11 @@ export default {
         }
       });
     };
+    // 翻页
+    const handleCurrentChange = (current) => {
+      pager.pageNum = current;
+      getUserList();
+    }
 
     return {
       user,
@@ -397,6 +403,7 @@ export default {
       handleCreate,
       handleClose,
       handleSubmit,
+      handleCurrentChange,
     };
   },
 };
