@@ -138,16 +138,17 @@ export default {
         {
           label: "权限列表",
           prop: "permissionList",
+          width: 200,
           formatter: (row, column, value) => {
             let names = [];
             let list = value.halfCheckedKeys || [];
             list.map((key) => {
-              if (key) {
+              let name = this.actionMap[key];
+              if (key && name) {
                 names.push(this.actionMap[key]);
               }
-              return names.join(",");
             });
-            
+            return names.join(",");
           },
         },
         {
@@ -204,7 +205,7 @@ export default {
         });
         this.roleList = list;
         // console.log(this.roleList);
-        this.pager.total= page.total;
+        this.pager.total = page.total;
       } catch (error) {
         throw new Error(error);
       }
@@ -231,7 +232,11 @@ export default {
       this.action = "edit";
       this.showModal = true;
       this.$nextTick(() => {
-        this.roleForm = { _id: row._id, roleName: row.roleName, remark: row.remark };
+        this.roleForm = {
+          _id: row._id,
+          roleName: row.roleName,
+          remark: row.remark,
+        };
       });
     },
     // 表单重置
@@ -295,7 +300,7 @@ export default {
     },
     //
     // 翻页
-    handleCurrentChange (current) {
+    handleCurrentChange(current) {
       this.pager.pageNum = current;
       this.getUserList();
     },
