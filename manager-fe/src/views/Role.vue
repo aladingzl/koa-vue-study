@@ -185,7 +185,8 @@ export default {
     // 角色列表初始化
     async getRoleList() {
       try {
-        let { list, page } = await this.$api.getRoleList(this.queryForm);
+        // let pager = this.pager;
+        let { list, page } = await this.$api.getRoleList({ ...this.queryForm, ...this.pager });
         this.roleList = list;
         // console.log(this.roleList);
       } catch (error) {
@@ -219,6 +220,7 @@ export default {
     // 表单重置
     handleReset(strRef) {
       this.$refs[strRef].resetFields();
+      this.getRoleList();
     },
     // 角色删除
     async handleDel(_id) {
@@ -286,6 +288,7 @@ export default {
         this.$refs.permisssionTreeRef.setCheckedKeys(checkedKeys);
       }, 0);
     },
+    // 字典映射
     getActionMap(list) {
       let actionMap = {};
       const deep = (arr) => {
