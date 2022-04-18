@@ -3,7 +3,7 @@ const util = require('../utils/util');
 const Dept = require('../models/deptSchema');
 
 router.prefix('/dept');
-// 部门属性列表
+// 部门树形列表
 router.get('/list', async (ctx) => {
   let {
     deptName
@@ -13,8 +13,31 @@ router.get('/list', async (ctx) => {
     params.deptName = deptName;
   }
   let rootList = await Dept.find(params);
-  ctx.body = util.success(rootList);
+  if (deptName) {
+    ctx.body = util.success(rootList);
+  } else {
+    let treeList = getTreeDept(rootList, null, []);
+    ctx.body = util.success(treeList);
+  }
 })
+// 递归拼接树形列表
+function getTreeDept(rootList, id, list) {
+  for (let i = 0; i < rootList.length; i++) {
+    let item = rootList[i];
+    // 原数据是 Buffer类型，一次递归遍历一级二级。。。菜单
+    if (String(item.parentId.slice().pop()) == String(id)) {
+      list.push(item._doc);
+    }
+  }
+  list.map(item => {
+    item.children = [];
+    getTreeDept(rootList, item._id, item.children);
+    if (item.children.length == 0) {
+      delete item.children;
+    }
+  })
+  return list;
+}
 // 部门操作：创建、编辑、删除
 router.post('/operate', async (ctx) => {
   const {
