@@ -8,11 +8,11 @@ const userSchema = mongoose.Schema({
   componet: String, //组件地址
   menuState: Number, //菜单状态
   parentId: [mongoose.Types.ObjectId],
-  "createTime": {
+  createTime: {
     type: Date,
     default: Date.now()
   }, //创建时间
-  "updateTime": {
+  updateTime: {
     type: Date,
     default: Date.now()
   }, //更新时间

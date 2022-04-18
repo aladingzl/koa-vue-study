@@ -66,12 +66,12 @@ export default {
 
   /**部门管理 */
   // 获取部门列表
-  getDeptList() {
+  getDeptList(params) {
     return request({
       url: '/dept/list',
       method: 'get',
-      data: {},
-      mock: true
+      data: params,
+      mock: false
     })
   },
   // 
@@ -89,7 +89,7 @@ export default {
       url: '/dept/operate',
       method: 'post',
       data: params,
-      mock: true
+      mock: false
     })
   },
 

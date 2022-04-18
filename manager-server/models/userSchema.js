@@ -2,40 +2,40 @@ const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
   // 用户 ID，自增长
-  "userId": Number,
+  userId: Number,
   // 用户名称
-  "userName": String,
+  userName: String,
   // 用户密码，md5加密
-  "userPwd": String,
+  userPwd: String,
   // 用户邮箱
-  "userEmail": String,
+  userEmail: String,
   // 手机号
-  "mobile": String,
+  mobile: String,
   // 性别
-  "sex": Number,
+  sex: Number,
   // 部门
-  "depId": [],
+  depId: [],
   // 岗位
-  "job": String,
+  job: String,
   // 1：在职，2：离职，3：试用期
-  "state": {
+  state: {
     type: Number,
     default: 1
   },
   // 用户角色，0：系统管理员，1：普通用户
-  "role": {
+  role: {
     type: Number,
     default: 1
   },
   // 系统角色
-  "roleList": [],
+  roleList: [],
   // 创建时间
-  "createTime": {
+  createTime: {
     type: Date,
     default: Date.now()
   },
   // 更新时间
-  "lastLoginTime": {
+  lastLoginTime: {
     type: Date,
     default: Date.now()
   },

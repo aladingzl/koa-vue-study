@@ -37,7 +37,10 @@
               @click="handleEdit(scope.row)"
               >编辑</el-button
             >
-            <el-button size="small" type="danger" @click="handleDel(scope.row._id)"
+            <el-button
+              size="small"
+              type="danger"
+              @click="handleDel(scope.row._id)"
               >删除</el-button
             >
           </template>
@@ -128,7 +131,9 @@ export default {
         },
       ],
       deptList: [],
-      deptForm: {},
+      deptForm: {
+        parentId: [null],
+      },
       pager: {
         pageNum: 0,
         pageSize: 10,
@@ -167,10 +172,7 @@ export default {
   },
   methods: {
     async getDeptList() {
-      let list = await this.$api.getDeptList({
-        ...this.queryForm,
-        ...this.pager,
-      });
+      let list = await this.$api.getDeptList(this.queryForm);
       this.deptList = list;
     },
     async getDeptUserList() {
@@ -194,8 +196,8 @@ export default {
       this.$nextTick(() => {
         Object.assign(this.deptForm, row, {
           deptUser: `${row.userId}/${row.userName}/${row.userEmail}`,
-        })
-      })
+        });
+      });
     },
     async handleDel(_id) {
       this.action = "delete";
@@ -212,12 +214,10 @@ export default {
         if (valid) {
           let params = { ...this.deptForm, action: this.action };
           delete params.deptUser;
-          let res = await this.$api.deptOperate(params);
-          if (res) {
-            this.$message.success("操作成功");
-            this.handleClose();
-            this.getDeptList();
-          }
+          await this.$api.deptOperate(params);
+          this.$message.success("操作成功");
+          this.handleClose();
+          this.getDeptList();
         }
       });
     },
