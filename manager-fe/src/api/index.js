@@ -22,7 +22,7 @@ export default {
       url: '/users/list',
       method: 'get',
       data: params,
-      mock: true
+      mock: false
     })
   },
   // 用户删除
@@ -31,7 +31,7 @@ export default {
       url: '/users/delete',
       method: 'post',
       data: params,
-      mock: true
+      mock: false
     })
   },
   // 用户提交
@@ -40,10 +40,17 @@ export default {
       url: '/users/operate',
       method: 'post',
       data: params,
-      mock: true
+      mock: false
     })
   },
-
+  getPermissionList() {
+    return request({
+      url: '/users/permissionlist',
+      method: 'get',
+      data: {},
+      mock: false
+    })
+  },
   /**菜单管理 */
   // 获取菜单
   getMenuList(params) {
@@ -51,16 +58,17 @@ export default {
       url: '/menu/list',
       method: 'get',
       data: params,
-      mock: true
+      mock: false
     })
   },
+
   // 菜单创建/编辑/删除
   menuSubmit(params) {
     return request({
       url: '/menu/operate',
       method: 'post',
       data: params,
-      mock: true
+      mock: false
     })
   },
 
@@ -93,7 +101,7 @@ export default {
     })
   },
 
-  
+
   /**角色管理 */
   // 获取角色列表
   getRoleList(params) {
@@ -110,7 +118,7 @@ export default {
       url: '/roles/allList',
       method: 'get',
       data: {},
-      mock: true
+      mock: false
     })
   },
   // 角色操作

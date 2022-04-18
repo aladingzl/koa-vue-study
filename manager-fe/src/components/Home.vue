@@ -96,7 +96,7 @@ export default {
     handleLogout(key) {
       if (key == "email") return;
       this.$store.commit("saveUserInfo", "");
-      this.userInfo = null;
+      this.userInfo = {};
       this.$router.push("/login");
     },
     // 获取通知数量
@@ -111,7 +111,8 @@ export default {
     // 获取菜单
     async getMenuList() {
       try {
-        const list = await this.$api.getMenuList();
+        // const list = await this.$api.getMenuList();
+        const list = await this.$api.getPermissionList();
         this.userMenu = list;
         // console.log(this.userMenu);
       } catch (error) {

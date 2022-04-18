@@ -8,7 +8,7 @@ router.prefix('/roles');
 //  查询所有角色列表
 router.get('/allList', async (ctx) => {
   try {
-    const list = Role.find({}, "_id, roleName");
+    const list = await Role.find({}, "_id, roleName");
     ctx.body = util.success(list);
   } catch (error) {
     ctx.body = util.fail(`查询失败：${error.stack}`);

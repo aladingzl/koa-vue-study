@@ -4,6 +4,8 @@
 const router = require('koa-router')();
 const User = require('../models/userSchema');
 const Counter = require('../models/counterSchema');
+const Menu = require('../models/menuSchema');
+const Role = require('../models/roleSchema');
 const util = require('../utils/util');
 const jwt = require('jsonwebtoken');
 router.prefix('/users');
@@ -22,6 +24,7 @@ router.post('/login', async (ctx) => {
 
     if (res) {
       const data = res._doc;
+      // 生成 token
       const token = jwt.sign({
         data
       }, 'rp', {
@@ -154,12 +157,20 @@ router.post('/operate', async (ctx) => {
       }
     }
   } else {
-    if(!deptId) {
+    if (!deptId) {
       ctx.body = util.fail('部门不能为空', util.CODE.PARAM_ERROR);
       return;
     }
     try {
-      const res = await User.findOneAndUpdate({ userId }, { mobile, job, state, roleList, deptId });
+      const res = await User.findOneAndUpdate({
+        userId
+      }, {
+        mobile,
+        job,
+        state,
+        roleList,
+        deptId
+      });
       ctx.body = util.success({}, '更新成功');
     } catch (error) {
       ctx.body = util.fail(error.stack, '更新失败');
@@ -175,5 +186,43 @@ router.get('/all/list', async (ctx) => {
     ctx.body = util.fail(error.stack);
   }
 })
+// 获取用户对应的权限菜单
+router.get('/permissionlist', async (ctx) => {
+  let authorization = ctx.request.headers.authorization;
+  let {
+    data
+  } = util.decoded(authorization);
+  let menuList = await getMenuList(data.role, data.roleList);
+  ctx.body = util.success(menuList);
+})
 
+async function getMenuList(userRole, roleKeys) {
+  let rootList = [];
+  if (userRole == 0) {
+    rootList = await Menu.find({}) || [];
+  } else {
+    // 根据用户拥有的角色，获取权限列表
+    // 现查找用户对应的角色有哪些
+    let roleList = await Role.find({
+      _id: {
+        $in: roleKeys
+      }
+    });
+    let permissionlist = [];
+    roleList.map(role => {
+      let {
+        checkedKeys,
+        halfCheckedKeys
+      } = role.permissionlist;
+      permissionlist = permissionlist.concat([...checkedKeys, ...halfCheckedKeys]);
+    })
+    permissionlist = [...new Set(permissionlist)];
+    rootList = await Menu.find({
+      _id: {
+        $in: permissionlist
+      }
+    });
+  }
+  return util.getTreeMenu(rootList, null, []);
+}
 module.exports = router

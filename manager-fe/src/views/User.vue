@@ -278,7 +278,7 @@ export default {
     // 获取角色列表
     const getAllRoleList = async () => {
       let list = await proxy.$api.getAllRoleList();
-      // console.log(list);
+      console.log(list);
       roleList.value = list;
     };
 
