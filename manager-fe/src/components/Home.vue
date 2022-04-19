@@ -111,7 +111,6 @@ export default {
     // 获取菜单
     async getMenuList() {
       try {
-        // const list = await this.$api.getMenuList();
         const { menuList, actionList } = await this.$api.getPermissionList();
         this.userMenu = menuList;
         this.$store.commit("saveUserMenu", menuList);

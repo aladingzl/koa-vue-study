@@ -28,7 +28,8 @@
 </template>
 
 <script>
-import storage from '../utils/storage'
+import storage from "../utils/storage";
+import utils from "../utils/utils";
 export default {
   name: "login",
   data() {
@@ -57,12 +58,11 @@ export default {
   },
   methods: {
     login() {
-      this.$refs.userForm.validate(async (valid) => {
+      this.$refs.userForm.validate((valid) => {
         if (valid) {
           this.$api.login(this.user).then((res) => {
-            // console.log(res);
             this.$store.commit("saveUserInfo", res);
-            await this.loadAsyncRoutes();
+            this.loadAsyncRoutes();
             this.$router.push("/welcome");
           });
         } else {
@@ -77,8 +77,10 @@ export default {
           const { menuList } = await this.$api.getPermissionList();
           let routes = utils.generateRoute(menuList);
           routes.map((route) => {
-            let url = `./../views/${route.component}.vue`;
-            route.component = () => import(url);
+            // let url = `./../views/${route.component}.vue`;
+            // route.component = () => import(url);
+            let cpt = route.component;
+            route.component = () => import(`./../views/${cpt}.vue`);
             this.$router.addRoute("home", route);
           });
         } catch (error) {}

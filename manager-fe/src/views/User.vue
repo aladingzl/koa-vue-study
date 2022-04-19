@@ -280,10 +280,7 @@ export default {
     //获取用户列表
     const getUserList = async () => {
       let params = { ...user, ...pager };
-      // console.log(params);
       try {
-        // console.log(ctx.$api);
-        // console.log(proxy);
         const { list, page } = await proxy.$api.getUserList(params);
         userList.value = list;
         pager.total = page.total;
@@ -295,7 +292,6 @@ export default {
     // 获取角色列表
     const getAllRoleList = async () => {
       let list = await proxy.$api.getAllRoleList();
-      console.log(list);
       roleList.value = list;
     };
 

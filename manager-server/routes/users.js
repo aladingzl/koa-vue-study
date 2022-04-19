@@ -212,18 +212,18 @@ async function getMenuList(userRole, roleKeys) {
         $in: roleKeys
       }
     });
-    let permissionlist = [];
+    let permissionList = [];
     roleList.map(role => {
       let {
         checkedKeys,
         halfCheckedKeys
-      } = role.permissionlist;
-      permissionlist = permissionlist.concat([...checkedKeys, ...halfCheckedKeys]);
+      } = role.permissionList;
+      permissionList = permissionList.concat([...checkedKeys, ...halfCheckedKeys]);
     })
-    permissionlist = [...new Set(permissionlist)];
+    permissionList = [...new Set(permissionList)];
     rootList = await Menu.find({
       _id: {
-        $in: permissionlist
+        $in: permissionList
       }
     });
   }

@@ -24,38 +24,38 @@ const routes = [{
         },
         component: () => import('@/views/Welcome.vue')
       },
-      // {
-      //   name: 'user',
-      //   path: '/system/user',
-      //   meta: {
-      //     title: '用户管理'
-      //   },
-      //   component: () => import('@/views/User.vue')
-      // },
-      // {
-      //   name: 'menu',
-      //   path: '/system/menu',
-      //   meta: {
-      //     title: '菜单管理'
-      //   },
-      //   component: () => import('@/views/Menu.vue')
-      // },
-      // {
-      //   name: 'role',
-      //   path: '/system/role',
-      //   meta: {
-      //     title: '角色管理'
-      //   },
-      //   component: () => import('@/views/Role.vue')
-      // },
-      // {
-      //   name: 'dept',
-      //   path: '/system/dept',
-      //   meta: {
-      //     title: '部门管理'
-      //   },
-      //   component: () => import('@/views/Dept.vue')
-      // }
+      {
+        name: 'user',
+        path: '/system/user',
+        meta: {
+          title: '用户管理'
+        },
+        component: () => import('@/views/User.vue')
+      },
+      {
+        name: 'menu',
+        path: '/system/menu',
+        meta: {
+          title: '菜单管理'
+        },
+        component: () => import('@/views/Menu.vue')
+      },
+      {
+        name: 'role',
+        path: '/system/role',
+        meta: {
+          title: '角色管理'
+        },
+        component: () => import('@/views/Role.vue')
+      },
+      {
+        name: 'dept',
+        path: '/system/dept',
+        meta: {
+          title: '部门管理'
+        },
+        component: () => import('@/views/Dept.vue')
+      }
     ]
   },
   {
@@ -89,8 +89,10 @@ async function loadAsyncRoutes() {
       } = await API.getPermissionList();
       let routes = utils.generateRoute(menuList);
       routes.map(route => {
-        let url = `../views/${route.component}.vue`;
-        route.component = () => import(url);
+        // let url = `./../views/${route.component}.vue`;
+        // route.component = () => import( /* @vite-ignore */ url);
+        let cpt = route.component;
+        route.component = () => import(`./../views/${cpt}.vue`);
         router.addRoute('home', route);
       })
     } catch (error) {
