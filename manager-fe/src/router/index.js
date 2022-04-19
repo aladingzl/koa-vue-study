@@ -44,7 +44,7 @@ const routes = [{
           title: '角色管理'
         },
         component: () => import('@/views/Role.vue')
-      }, 
+      },
       {
         name: 'dept',
         path: '/system/dept',
@@ -77,4 +77,13 @@ const router = createRouter({
   routes
 })
 
+// 导航守卫
+router.beforeEach((to, form, next) => {
+  if (router.hasRoute(to.name)) {
+    document.title = to.meta.title;
+    next();
+  } else {
+    next('/404');
+  }
+})
 export default router
