@@ -55,6 +55,22 @@ const routes = [{
           title: '部门管理'
         },
         component: () => import('@/views/Dept.vue')
+      }, 
+      {
+        name: 'leave',
+        path: '/audit/leave',
+        meta: {
+          title: '休假申请'
+        },
+        component: () => import('@/views/Leave.vue')
+      }, 
+      {
+        name: 'approve',
+        path: '/audit/approve',
+        meta: {
+          title: '待我审批'
+        },
+        component: () => import('@/views/Approve.vue')
       }
     ]
   },

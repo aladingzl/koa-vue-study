@@ -141,6 +141,32 @@ export default {
   },
 
   /**审批管理 */
+  // 审批列表
+  getApplyList(params) {
+    return request({
+      url: '/leave/list',
+      method: 'get',
+      data: params,
+      mock: true
+    })
+  },
+  // 编辑操作
+  leaveOperate(params) {
+    return request({
+      url: '/leave/operate',
+      method: 'post',
+      data: params,
+      mock: true
+    })
+  },
+  leaveApprove(params) {
+    return request({
+      url: '/leave/approve',
+      method: 'post',
+      data: params,
+      mock: true
+    })
+  },
   // 通知数量
   noticeCount(params) {
     return request({
