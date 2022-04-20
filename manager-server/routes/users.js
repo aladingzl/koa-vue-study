@@ -51,7 +51,7 @@ router.get('/list', async (ctx) => {
   const {
     page,
     skipIndex
-  } = util.paper(ctx.request.query);
+  } = util.pager(ctx.request.query);
   let params = {};
   if (userId) params.userId = userId;
   if (userName) params.userName = userName;

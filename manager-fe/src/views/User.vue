@@ -376,6 +376,7 @@ export default {
       proxy.$refs.dialogForm.validate(async (valid) => {
         if (valid) {
           let params = toRaw(userForm);
+          console.log(params);
           params.userEmail += "@rp.com";
           params.action = action.value;
           let res = proxy.$api.userSubmit(params);

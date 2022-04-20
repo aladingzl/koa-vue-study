@@ -233,6 +233,7 @@ export default {
     // 加载申请列表
     const getApplyList = async () => {
       let params = { ...queryForm, ...pager, type: "approve" };
+      console.log(params);
       let { list, page } = await proxy.$api.getApplyList(params);
       applyList.value = list;
       pager.total = page.total;
@@ -275,7 +276,7 @@ export default {
       detail.value = data;
       showDetailModal.value = true;
     };
-
+    // 审核操作 pass：审核通过 refuse：驳回
     const handleApprove = (action) => {
       proxy.$refs.dialogForm.validate(async (valid) => {
         if (valid) {

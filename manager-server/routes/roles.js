@@ -22,7 +22,7 @@ router.get('/list', async (ctx) => {
   const {
     page,
     skipIndex
-  } = util.paper(ctx.request.query);
+  } = util.pager(ctx.request.query);
   try {
     let params = {};
     if (roleName) params.roleName = roleName;
